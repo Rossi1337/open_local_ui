@@ -37,6 +37,11 @@ class ChatProvider extends ChangeNotifier {
     _enableOllamaGpu = prefs.getBool('enableOllamaGpu') ?? true;
 
     notifyListeners();
+
+    final lastModel = prefs.getString('selectedModel');
+    if (lastModel != null) {
+      setModel(lastModel);
+    }
   }
 
   ChatSessionWrapper addSession(String title) {
@@ -385,6 +390,9 @@ class ChatProvider extends ChangeNotifier {
     }
 
     _modelName = name;
+
+    SharedPreferences.getInstance()
+        .then((p) => p.setString('selectedModel', name));
 
     _model = ChatOllama(
       defaultOptions: ChatOllamaOptions(
